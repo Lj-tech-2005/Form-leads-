@@ -5,7 +5,7 @@ const server = express();
 const cors = require("cors");
 const leadrouters = require('./routers/leadsrouters');
 
-const allowedOrigins = ["http://localhost:5173"];
+const allowedOrigins = ["https://form-leads.vercel.app"];
 
 server.use(
     cors({
