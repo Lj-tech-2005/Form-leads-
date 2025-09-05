@@ -3,9 +3,9 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "dev": "nodemon server.js",
+    "dev": "nodemon index.js",
     "build": "cd ../frontend && npm install && npm run build",
-    "start": "node server.js"
+    "start": "node index.js"
   },
   "dependencies": {
     "cors": "^2.8.5",
