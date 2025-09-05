@@ -11,7 +11,7 @@ export default function Layout() {
     <div className="flex h-screen">
       <ToastContainer autoClose={1200} />
       <div
-        className={`fixed top-0 left-0 z-50 w-64 h-full bg-white shadow-lg transform transition-transform duration-300 lg:hidden ${sidebarOpen ? "translate-x-0" : "-translate-x-full"
+        className={`fixed top-0 left-0 z-50 w-50 h-full bg-white shadow-lg transform transition-transform duration-300 lg:hidden ${sidebarOpen ? "translate-x-0" : "-translate-x-full"
           }`}
       >
         <Sidebar />

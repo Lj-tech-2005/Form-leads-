@@ -14,7 +14,7 @@ export default function Sidebar() {
   const isActive = (path) => location.pathname === path;
 
   return (
-    <div className="w-64 h-screen bg-white border-r flex flex-col p-4">
+    <div className="w-50 h-screen bg-white border-r flex flex-col p-4">
       <h1 className="text-lg font-bold mb-6">LeadCRM</h1>
       <hr className="mb-4" />
 
@@ -45,30 +45,7 @@ export default function Sidebar() {
           <span>Leads</span>
         </Link>
 
-        <div className="flex items-center space-x-3 p-2 rounded-md text-sm font-medium text-gray-500 cursor-not-allowed">
-          <FaCalendarCheck className="w-5 h-5" />
-          <span>Follow-Ups</span>
-        </div>
-
-        <div className="flex items-center space-x-3 p-2 rounded-md text-sm font-medium text-gray-500 cursor-not-allowed">
-          <FaChartLine className="w-5 h-5" />
-          <span>Sales Activity</span>
-        </div>
-
-        <div className="flex items-center space-x-3 p-2 rounded-md text-sm font-medium text-gray-500 cursor-not-allowed">
-          <FaBox className="w-5 h-5" />
-          <span>Products</span>
-        </div>
-
-        <div className="flex items-center space-x-3 p-2 rounded-md text-sm font-medium text-gray-500 cursor-not-allowed">
-          <FaBell className="w-5 h-5" />
-          <span>Notifications</span>
-        </div>
-
-        <div className="flex items-center space-x-3 p-2 rounded-md text-sm font-medium text-gray-500 cursor-not-allowed">
-          <FaCog className="w-5 h-5" />
-          <span>Settings</span>
-        </div>
+    
       </div>
     </div>
   );

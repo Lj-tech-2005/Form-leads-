@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import { axiosApiInstance } from "../library/helper";
+import { notify } from "../library/helper";
 
 export default function AddLeads() {
   const [formData, setFormData] = useState({
@@ -12,6 +14,7 @@ export default function AddLeads() {
   });
 
   const [errors, setErrors] = useState({});
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -36,140 +39,181 @@ export default function AddLeads() {
     return newErrors;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const validationErrors = validate();
     setErrors(validationErrors);
 
+    if (Object.keys(validationErrors).length > 0) return;
+
+    try {
+      setLoading(true);
+
+      const res = await axiosApiInstance.post(
+        "/leads/create",
+        {
+          name: formData.name,
+          email: formData.email,
+          mobile: formData.mobile,
+          city: formData.city,
+          state: formData.state,
+          field: formData.field,
+        },
+        {
+          headers: { "Content-Type": "application/json" },
+        }
+      );
+
+      notify(res.data.msg, res.data.flag);
+
+      if (res.data.flag === 1) {
+        setFormData({
+          name: "",
+          email: "",
+          mobile: "",
+          city: "",
+          state: "",
+          field: "",
+        });
+        setErrors({});
+      }
+    } catch (err) {
+      console.error(err);
+      notify("Something went wrong ", 0);
+    } finally {
+      setLoading(false);
+    }
   };
 
-  return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 p-6">
-      <div className="w-full max-w-lg bg-white shadow-2xl rounded-2xl p-8">
-        <div className="flex justify-between items-center mb-6">
-          <h2 className="text-2xl font-bold text-gray-800">Add New Lead</h2>
-          <Link
-            to="/leads"
-            className="px-4 py-2 bg-gray-200 text-gray-700 rounded-xl hover:bg-gray-300 transition duration-300 cursor-pointer"
-          >
-            ← Back
-          </Link>
+
+return (
+  <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 p-6">
+    <div className="w-full max-w-lg bg-white shadow-2xl rounded-2xl p-8">
+      <div className="flex justify-between items-center mb-6">
+        <h2 className="text-2xl font-bold text-gray-800">Add New Lead</h2>
+        <Link
+          to="/leads"
+          className="px-4 py-2 bg-gray-200 text-gray-700 rounded-xl hover:bg-gray-300 transition duration-300 cursor-pointer"
+        >
+          ← Back
+        </Link>
+      </div>
+
+      <form className="space-y-5" onSubmit={handleSubmit}>
+        <div>
+          <label className="block text-sm font-medium text-gray-600 mb-1">
+            Name
+          </label>
+          <input
+            type="text"
+            name="name"
+            value={formData.name}
+            onChange={handleChange}
+            placeholder="Enter full name"
+            className="w-full px-4 py-2 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-300 cursor-pointer"
+          />
+          {errors.name && (
+            <p className="text-red-500 text-sm mt-1">{errors.name}</p>
+          )}
         </div>
 
-        <form className="space-y-5" onSubmit={handleSubmit}>
-          <div>
-            <label className="block text-sm font-medium text-gray-600 mb-1">
-              Name
-            </label>
-            <input
-              type="text"
-              name="name"
-              value={formData.name}
-              onChange={handleChange}
-              placeholder="Enter full name"
-              className="w-full px-4 py-2 border rounded-xl focus:outline-none focus:ring-2 focus:ring-green-300 cursor-pointer"
-            />
-            {errors.name && (
-              <p className="text-red-500 text-sm mt-1">{errors.name}</p>
-            )}
-          </div>
+        <div>
+          <label className="block text-sm font-medium text-gray-600 mb-1">
+            Email
+          </label>
+          <input
+            type="email"
+            name="email"
+            value={formData.email}
+            onChange={handleChange}
+            placeholder="Enter email"
+            className="w-full px-4 py-2 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-300 cursor-pointer"
+          />
+          {errors.email && (
+            <p className="text-red-500 text-sm mt-1">{errors.email}</p>
+          )}
+        </div>
 
-          <div>
-            <label className="block text-sm font-medium text-gray-600 mb-1">
-              Email
-            </label>
-            <input
-              type="email"
-              name="email"
-              value={formData.email}
-              onChange={handleChange}
-              placeholder="Enter email"
-              className="w-full px-4 py-2 border rounded-xl focus:outline-none focus:ring-2 focus:ring-green-300 cursor-pointer"
-            />
-            {errors.email && (
-              <p className="text-red-500 text-sm mt-1">{errors.email}</p>
-            )}
-          </div>
+        <div>
+          <label className="block text-sm font-medium text-gray-600 mb-1">
+            Mobile
+          </label>
+          <input
+            type="tel"
+            name="mobile"
+            value={formData.mobile}
+            onChange={handleChange}
+            placeholder="Enter mobile number"
+            className="w-full px-4 py-2 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-300 cursor-pointer"
+          />
+          {errors.mobile && (
+            <p className="text-red-500 text-sm mt-1">{errors.mobile}</p>
+          )}
+        </div>
 
-          <div>
-            <label className="block text-sm font-medium text-gray-600 mb-1">
-              Mobile
-            </label>
-            <input
-              type="tel"
-              name="mobile"
-              value={formData.mobile}
-              onChange={handleChange}
-              placeholder="Enter mobile number"
-              className="w-full px-4 py-2 border rounded-xl focus:outline-none focus:ring-2 focus:ring-green-300 cursor-pointer"
-            />
-            {errors.mobile && (
-              <p className="text-red-500 text-sm mt-1">{errors.mobile}</p>
-            )}
-          </div>
+        <div>
+          <label className="block text-sm font-medium text-gray-600 mb-1">
+            City
+          </label>
+          <input
+            type="text"
+            name="city"
+            value={formData.city}
+            onChange={handleChange}
+            placeholder="Enter city"
+            className="w-full px-4 py-2 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-300 cursor-pointer"
+          />
+          {errors.city && (
+            <p className="text-red-500 text-sm mt-1">{errors.city}</p>
+          )}
+        </div>
 
-          <div>
-            <label className="block text-sm font-medium text-gray-600 mb-1">
-              City
-            </label>
-            <input
-              type="text"
-              name="city"
-              value={formData.city}
-              onChange={handleChange}
-              placeholder="Enter city"
-              className="w-full px-4 py-2 border rounded-xl focus:outline-none focus:ring-2 focus:ring-green-300 cursor-pointer"
-            />
-            {errors.city && (
-              <p className="text-red-500 text-sm mt-1">{errors.city}</p>
-            )}
-          </div>
+        <div>
+          <label className="block text-sm font-medium text-gray-600 mb-1">
+            State
+          </label>
+          <input
+            type="text"
+            name="state"
+            value={formData.state}
+            onChange={handleChange}
+            placeholder="Enter state"
+            className="w-full px-4 py-2 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-300 cursor-pointer"
+          />
+          {errors.state && (
+            <p className="text-red-500 text-sm mt-1">{errors.state}</p>
+          )}
+        </div>
 
-          <div>
-            <label className="block text-sm font-medium text-gray-600 mb-1">
-              State
-            </label>
-            <input
-              type="text"
-              name="state"
-              value={formData.state}
-              onChange={handleChange}
-              placeholder="Enter state"
-              className="w-full px-4 py-2 border rounded-xl focus:outline-none focus:ring-2 focus:ring-green-300 cursor-pointer"
-            />
-            {errors.state && (
-              <p className="text-red-500 text-sm mt-1">{errors.state}</p>
-            )}
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-600 mb-1">
-              Interested Field
-            </label>
-            <select
-              name="field"
-              value={formData.field}
-              onChange={handleChange}
-              className="w-full px-4 py-2 border rounded-xl focus:outline-none focus:ring-2 focus:ring-green-300 cursor-pointer"
-            >
-              <option value="">Select field</option>
-              <option value="web-development">Web Development</option>
-              <option value="frontend-developer">Frontend Developer</option>
-              <option value="ui-ux">UI/UX</option>
-            </select>
-            {errors.field && (
-              <p className="text-red-500 text-sm mt-1">{errors.field}</p>
-            )}
-          </div>
-
-          <button
-            type="submit"
-            className="w-full py-3 bg-blue-600 text-white rounded-xl font-semibold hover:bg-green-500 transition duration-300 cursor-pointer"
+        <div>
+          <label className="block text-sm font-medium text-gray-600 mb-1">
+            Interested Field
+          </label>
+          <select
+            name="field"
+            value={formData.field}
+            onChange={handleChange}
+            className="w-full px-4 py-2 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-300 cursor-pointer"
           >
-            Submit Lead
-          </button>
-        </form>
-      </div>
+            <option value="">Select field</option>
+            <option value="web-development">Web Development</option>
+            <option value="frontend-developer">Frontend Developer</option>
+            <option value="ui-ux">UI/UX</option>
+          </select>
+          {errors.field && (
+            <p className="text-red-500 text-sm mt-1">{errors.field}</p>
+          )}
+        </div>
+
+        <button
+          type="submit"
+          disabled={loading}
+          className="w-full py-3 bg-blue-600 text-white rounded-xl font-semibold hover:bg-blue-600 transition duration-300 cursor-pointer disabled:opacity-50"
+        >
+          {loading ? "Submitting..." : "Submit Lead"}
+        </button>
+      </form>
     </div>
-  );
+  </div>
+);
 }

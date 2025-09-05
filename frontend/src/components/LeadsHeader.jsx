@@ -11,7 +11,7 @@ export default function LeadsHeader() {
       <Link
         to="/addleads"
       >
-        <button className="flex items-center gap-2 rounded-md bg-blue-600 px-4 py-2 text-white font-medium hover:bg-blue-700 transition">
+        <button className="flex items-center cursor-pointer gap-2 rounded-md bg-blue-600 px-4 py-2 text-white font-medium hover:bg-blue-700 transition">
           <FaPlus className="text-sm" />
           Add Lead
         </button>
