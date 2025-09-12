@@ -6,6 +6,8 @@ import Swal from "sweetalert2";
 export default function Leads() {
   const [leads, setLeads] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [statusFilter, setStatusFilter] = useState("all");
+  const [search, setSearch] = useState("");
 
   useEffect(() => {
     const fetchLeads = async () => {
@@ -65,14 +67,53 @@ export default function Leads() {
     });
   };
 
+  const filteredLeads = leads.filter((lead) => {
+    const matchStatus =
+      statusFilter === "all"
+        ? true
+        : statusFilter === "active"
+        ? lead.status
+        : !lead.status;
+
+    const matchSearch =
+      lead.name.toLowerCase().includes(search.toLowerCase()) ||
+      lead.email.toLowerCase().includes(search.toLowerCase()) ||
+      lead.mobile.includes(search);
+
+    return matchStatus && matchSearch;
+  });
+
   return (
     <div className="min-h-screen bg-gray-50 p-2 sm:p-0">
       <LeadsHeader />
+      <div className="bg-white shadow-md rounded-lg p-3 mt-4 flex flex-col sm:flex-row gap-3 sm:items-center sm:justify-between">
+        <div className="flex items-center gap-2">
+          <label className="text-sm font-medium">Filter by Status:</label>
+          <select
+            value={statusFilter}
+            onChange={(e) => setStatusFilter(e.target.value)}
+            className="border rounded px-2 py-1 text-sm"
+          >
+            <option value="all">All</option>
+            <option value="active">Active</option>
+            <option value="inactive">Inactive</option>
+          </select>
+        </div>
+        <div className="flex items-center gap-2">
+          <input
+            type="text"
+            placeholder="Search by name, email, mobile..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="border rounded px-3 py-1 text-sm w-full sm:w-72"
+          />
+        </div>
+      </div>
       <div className="mt-6">
         {loading ? (
           <p className="text-center text-gray-500">Loading...</p>
-        ) : leads.length === 0 ? (
-          <p className="text-center text-gray-500">No leads available</p>
+        ) : filteredLeads.length === 0 ? (
+          <p className="text-center text-gray-500">No leads found</p>
         ) : (
           <>
             <div className="hidden lg:block bg-white shadow-lg rounded-lg p-2 sm:p-4">
@@ -92,7 +133,7 @@ export default function Leads() {
                     </tr>
                   </thead>
                   <tbody>
-                    {leads.map((lead) => (
+                    {filteredLeads.map((lead) => (
                       <tr key={lead._id} className="text-center">
                         <td className="border p-2">{lead.name}</td>
                         <td className="border p-2">{lead.email}</td>
@@ -127,7 +168,7 @@ export default function Leads() {
               </div>
             </div>
             <div className="block lg:hidden space-y-4">
-              {leads.map((lead) => (
+              {filteredLeads.map((lead) => (
                 <div
                   key={lead._id}
                   className="bg-white shadow-lg rounded-lg p-4 space-y-2"

@@ -17,7 +17,7 @@ const leadsController = {
   },
   async read(req, res) {
     try {
-      const leads = await Leadmodel.find().sort({ createdAt: -1 }); // latest first
+      const leads = await Leadmodel.find().sort({ createdAt: -1 }); 
       return res.status(200).json(leads);
     } catch (error) {
       console.log(error);
