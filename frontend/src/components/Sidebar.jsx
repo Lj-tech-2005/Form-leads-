@@ -15,7 +15,7 @@ export default function Sidebar() {
 
   return (
     <div className="w-50 h-screen bg-white border-r flex flex-col p-4">
-      <h1 className="text-lg font-bold mb-6">LeadCRM</h1>
+      <h1 className="text-lg font-bold mb-6">Shop Detail ALL Rajasthan</h1>
       <hr className="mb-4" />
 
       <div className="flex flex-col space-y-2">
@@ -42,7 +42,7 @@ export default function Sidebar() {
             }`}
         >
           <FaUsers className="w-5 h-5" />
-          <span>Leads</span>
+          <span>SHOP LIST</span>
         </Link>
 
     
